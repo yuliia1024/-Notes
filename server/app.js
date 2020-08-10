@@ -1,27 +1,20 @@
 import express from 'express';
-import bodyParser from 'body-parser'
 import { serverPort } from '../config/config.json';
-import *as db from './db/db'
-db.setUpConnection();
-
+import bodyParser from 'body-parser';
+import {db} from './db/db';
+import {routes} from './routes/routes';
+const PORT = 4000;
 const app = express();
 
-app.use(bodyParser.json())
-app.get('/notes', (req,res)=>{
-    db.listNotes().then(data=>{
-        res.send(data);
-    });
-});
-app.post('/notes', (req,res)=>{
-    db.createNote(req.body).then(data=>res.send(data))
-});
-app.delete('/notes/:id', (req,res)=>{
-    db.deleteNote(req.body).then(data=>res.send(data))
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+routes(app);
+const begin = async () =>{
+    console.log('Try to connect to DB...');
+    await db();
 
-});
-
-
-const server = app.listen(serverPort, ()=>{
-    console.log(`server is running on port ${serverPort}`);
-
-});
+    app.listen(serverPort||PORT, () =>
+        console.log(`Your server is running on port ${serverPort||PORT}`)
+    );
+}
+begin();

@@ -9,10 +9,10 @@ export const routes = (app)=> {
             res.send(data);
         })
     });
-    app.route('/notes').post((req,res)=>{
+    app.route('/notes').post( (req,res)=>{
         createNote(req.body).then(data=>res.send(data))
     });
-    app.route('/notes/:id').delete( (req,res)=>{
+    app.route('/notes/:id').delete((req,res)=>{
         deleteNote(req.body).then(data=>res.send(data))
 
     });

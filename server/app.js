@@ -1,20 +1,27 @@
 import express from 'express';
-import { serverPort } from '../config/config.json';
+import cors from 'cors';
 import bodyParser from 'body-parser';
-import {db} from './db/db';
-import {routes} from './routes/routes';
-const PORT = 4000;
+
+import { serverPort } from '../etc/config.json';
+import *as DB from './db/db'
+
+
+import {routes} from './routes/route';
+
+// Initialization of express application
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-routes(app);
-const begin = async () =>{
-    console.log('Try to connect to DB...');
-    await db();
+// Set up connection of database
+DB.setUpConnection();
 
-    app.listen(serverPort||PORT, () =>
-        console.log(`Your server is running on port ${serverPort||PORT}`)
-    );
-}
-begin();
+// Using bodyParser middleware
+app.use( bodyParser.json() );
+
+// Allow requests from any origin
+app.use(cors({ origin: '*' }));
+
+routes(app);
+
+const server = app.listen(serverPort, function() {
+    console.log(`Server is up and running on port ${serverPort}`);
+});

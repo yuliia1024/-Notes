@@ -1,16 +1,7 @@
-import mongoose from 'mongoose';
-import config from '../../config/config.json';
+import mongoose from "mongoose";
 
-export const db  = async ()=>{
-    try {
-        mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name}`|| 'mongodb://localhost:27017/notes', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+import config from '../../etc/config.json';
 
-        console.log('Connected to DB!');
-    }catch (e) {
-        console.log('oops, we have problem with DB');
-        process.exit();
-    };
-};
+export function setUpConnection() {
+    mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name}`);
+}
